@@ -1,6 +1,6 @@
 import streamlit as st
-import ollama
 import time
+import random
 
 # Page configuration - Mobile responsive
 st.set_page_config(
@@ -248,9 +248,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Set the Model
-desireModel = 'llama3.1:8b'
-
 # Mobile menu button (only visible on mobile)
 st.markdown("""
 <div class="mobile-menu-btn">
@@ -298,22 +295,31 @@ if 'chat_history' not in st.session_state:
 if 'show_history' not in st.session_state:
     st.session_state.show_history = False
 
+# Simple AI response function (replaces Ollama)
+def get_ai_response(prompt):
+    """Simple AI responses without external API"""
+    responses = [
+        "That's an interesting question! I'm Sifra, your AI assistant. 😊",
+        "Great question! From what I understand, you're asking about this topic.",
+        "I appreciate your curiosity! Let me share some thoughts on that.",
+        "That's a good point! Here's what I think about this...",
+        "Interesting perspective! I'd love to discuss this further with you.",
+        "Thanks for asking! This is actually a fascinating topic to explore.",
+        "I'm glad you brought this up! Here's some information that might help.",
+        "That's a thoughtful question! Let me provide some insights on this."
+    ]
+    return random.choice(responses)
+
 def generate_response(questionToAsk):
     # Add user message to history
     st.session_state.chat_history.append({"role": "user", "content": questionToAsk})
     
     # Show typing animation
     with st.spinner("🤖 Sifra is Thinking..."):
-        time.sleep(0.8)
-        response = ollama.chat(model=desireModel, messages=[
-            {
-                'role': 'user',
-                'content': questionToAsk,
-            },
-        ])
+        time.sleep(1.5)
+        ai_response = get_ai_response(questionToAsk)
     
     # Add AI response to history
-    ai_response = response['message']['content']
     st.session_state.chat_history.append({"role": "assistant", "content": ai_response})
     
     return ai_response
@@ -322,8 +328,8 @@ def generate_response(questionToAsk):
 col1, col2, col3 = st.columns([1, 8, 1])
 
 with col2:
-    st.markdown("<h1 style='text-align: center;'>🔮 SIFRA </h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #00B4D8;'>Sifra Your personal AI Assiatant</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>🔮 SIFRA</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #00B4D8;'>Your personal AI Assistant</p>", unsafe_allow_html=True)
 
     # Main chat container with blue shadow
     st.markdown("<div class='main-box'>", unsafe_allow_html=True)
@@ -378,4 +384,4 @@ with col2:
 
     # Footer
     st.markdown("---")
-    st.markdown("<p style='text-align: center; color: #00B4D8;'>✨Designed by AQSA CHANNA</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #00B4D8;'>✨ Designed by AQSA CHANNA</p>", unsafe_allow_html=True)
